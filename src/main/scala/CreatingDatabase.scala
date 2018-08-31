@@ -33,10 +33,14 @@ def completedInsertion (doc: Document, col: MongoCollection[Document]): Unit = {
 
 completedInsertion(mydoc, mycol) // this line uses the funtion to insert a document into the database. Now the collection and the database are instantiated and will get listed when you check the list of database names and collection names.
 
+def logFindAllResults(col: MongoCollection[Document]) : Unit = {
+col.find().foreach(println)
+} //this method uses the callback "foreach" to get the raw log of the existing documents within a collection. In the next script I will explain how to transit from an Observable, to Future and so on, in order to get an array of the key-value pairs within a document.
+
 mongoClient.close() // this will close the connection.
 
-def main (args: Array[String]) { //main method that will perform all tasks.
-
+def main (args: Array[String]) { //main method that will perform tasks.
+logFindAllResults(mycol)
 }
 
 }
