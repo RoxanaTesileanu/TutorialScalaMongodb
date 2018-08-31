@@ -13,7 +13,10 @@ import org.mongodb.scala._
 
 object CreatingDatabase{
 
-val mongoClient = MongoClient()
+val mongoClient : MongoClient = MongoClient() // this should open the connection and you can inspect all the connection settings and details.
+
+
+
 
 
 
