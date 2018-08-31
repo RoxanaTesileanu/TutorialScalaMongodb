@@ -19,7 +19,8 @@ val mongoClient : MongoClient = MongoClient() // this should open the connection
 
 
 
+def main (args: Array[String]) { //main method that will perform all tasks.
 
-
+}
 
 }
