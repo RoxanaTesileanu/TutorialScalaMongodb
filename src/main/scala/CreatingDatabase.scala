@@ -33,6 +33,8 @@ def completedInsertion (doc: Document, col: MongoCollection[Document]): Unit = {
 
 completedInsertion(mydoc, mycol) // this line uses the funtion to insert a document into the database. Now the collection and the database are instantiated and will get listed when you check the list of database names and collection names.
 
+mongoClient.close() // this will close the connection.
+
 def main (args: Array[String]) { //main method that will perform all tasks.
 
 }
