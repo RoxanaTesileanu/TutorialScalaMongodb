@@ -11,30 +11,27 @@ PREREQUISITES:
 
 import org.mongodb.scala._
 
-object CreatingDatabase{
+object CreatingDatabase {
 
 val mongoClient : MongoClient = MongoClient() // this should open the connection and you can inspect all the connection settings and details.
 
 val mydb : MongoDatabase = mongoClient.getDatabase("MyStuff") // this creates the database; until we populate it with records it isn't really instantiated by mongodb.
-val mycol = mydb.createCollection("FruitsAndVegetables") // this creates the collection; you will see its type is: org.mongodb.scala.SingleObservable[org.mongodb.scala.Completed]
+val mycol = mydb.getCollection("FruitsAndVegetables") // this creates the collection; until we populate it, it isn't really instantiated by mongodb.
 
-val mydoc = Document(
+val mydoc : org.mongodb.scala.Document = Document(
 	"_id"-> 0,
 	"fruits" -> "apple",
 	"color"-> "red",
 	"observation"-> "Eva took a bite and was wrong about it") // this creates a record. 
 
 def completedInsertion (doc: Document, col: MongoCollection[Document]): Unit = {
-     col.insertedOne(doc).subscribe(new Observer[Completed]{
+     col.insertOne(doc).subscribe(new Observer[Completed]{
      override def onNext(result: Completed) : Unit = println("inserted")
      override def onError(e: Throwable) : Unit = println("failed")
-     override def onComplete() : Unit = println("completed")}) //this method will insert a document into the database.
+     override def onComplete() : Unit = println("completed")})
+}  //this method will insert a document into the database.
 
 completedInsertion(mydoc, mycol) // this line uses the funtion to insert a document into the database. Now the collection and the database are instantiated and will get listed when you check the list of database names and collection names.
-
-
-
-
 
 def main (args: Array[String]) { //main method that will perform all tasks.
 
