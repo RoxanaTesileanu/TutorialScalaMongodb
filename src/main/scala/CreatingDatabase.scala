@@ -35,7 +35,7 @@ completedInsertion(mydoc, mycol) // this line uses the funtion to insert a docum
 
 def logFindAllResults(col: MongoCollection[Document]) : Unit = {
 col.find().foreach(println)
-} //this method uses the callback "foreach" to get the raw log of the existing documents within a collection. In the next script I will explain how to transit from an Observable, to Future and so on, in order to get an array of the key-value pairs within a document.
+} //this method uses the callback "foreach" to get the raw log of the existing documents within a collection. In the next script I will explain how to transit from an Observable, to Future and so on, in order to get an array of the key-value pairs within a document. At this point you should take a look at scala's futures and prominses: https://docs.scala-lang.org/overviews/core/futures.html. For more details on Futures and Options in Scala consult the book of Jason Swartz "Learning Scala".
 
 mongoClient.close() // this will close the connection.
 
