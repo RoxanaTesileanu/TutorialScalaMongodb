@@ -1,5 +1,5 @@
-/* This object helps you create a MongoDB database called "MyStuff". Within this database you will create a collection called "FruitsAndVegetables".
-The functions presented here will help you do CRUD processing. If you need additional guidance check the official reference of the mongodb-scala-driver.
+/* This object helps you create a MongoDB database called "MyStuff" on your localhost. Within this database you will create a collection called "FruitsAndVegetables".
+The functions presented here will help you do CRUD processing. If you need additional guidance check the official reference of the mongodb-scala-driver. If you need more complex connections you should use a connection string or the settings builder. In the next scala script I will elaborate a connection strig example (which you should be able to adapt to your personal requirements). 
 
 PREREQUISITES:
 - you should install mongodb on your machine (go to the official page and follow the steps for your distribution)
