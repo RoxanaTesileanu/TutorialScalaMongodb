@@ -52,6 +52,8 @@ val mydoc3 : org.mongodb.scala.Document = Document(
      "color" -> "braun",
      "observation" -> "Delicios!")
 
+val myDocsArray : Array[Document] = Array(mydoc1, mydoc2, mydoc3, mydoc4, mydoc5)
+
 def completedInsertion (doc: Document, col: MongoCollection[Document]): scala.concurrent.Future[org.mongodb.scala.Completed] = {
      val myFutureRecord = col.insertOne(doc).toFuture
      myFutureRecord 
@@ -69,7 +71,7 @@ Thread.sleep(4000)
 
 def main (args: Array[String]) {
 //completedInsertion(mydoc1, mycol) this line uses the function to insert a document into the database. Now, if the collection and the database don't exist they are instantiated and will get listed when you check the list of database names and collection names.
-
+//completedInsertionMany(myDocsArray, mycol) this line inserts the whole array of docs into the collection.
 logFindAllResults(mycol)
 
 mongoClient.close() // this will close the connection.
