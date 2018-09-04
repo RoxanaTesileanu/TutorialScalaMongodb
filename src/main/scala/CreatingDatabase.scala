@@ -40,11 +40,26 @@ val mydoc3 : org.mongodb.scala.Document = Document(
      "color" -> "yellow",
      "observation" -> "They are healthy!")
 
+ val mydoc4:  org.mongodb.scala.Document = Document(
+     "_id" -> 3,
+     "vegetables" -> "tomato",
+     "color" -> "red",
+     "observation" -> "Are the best!")
+
+ val mydoc5:  org.mongodb.scala.Document = Document(
+     "_id" -> 4,
+     "vegetables" -> "potatoes",
+     "color" -> "braun",
+     "observation" -> "Delicios!")
+
 def completedInsertion (doc: Document, col: MongoCollection[Document]): scala.concurrent.Future[org.mongodb.scala.Completed] = {
      val myFutureRecord = col.insertOne(doc).toFuture
      myFutureRecord 
 }  //this method will insert a document into the database.
 
+def completedInsertionMany(docArray: Array[Document], col: MongoCollection[Document]) : Array[scala.concurrent.Future[org.mongodb.scala.Completed]]= {
+  docArray.map(doc => completedInsertion(doc, col))
+}
 
 def logFindAllResults(col: MongoCollection[Document]) : Unit = {
 concurrent.Future{col.find().foreach(println)}
@@ -53,7 +68,7 @@ Thread.sleep(4000)
 
 
 def main (args: Array[String]) {
-//completedInsertion(mydoc, mycol) this line uses the function to insert a document into the database. Now, if the collection and the database don't exist they are instantiated and will get listed when you check the list of database names and collection names.
+//completedInsertion(mydoc1, mycol) this line uses the function to insert a document into the database. Now, if the collection and the database don't exist they are instantiated and will get listed when you check the list of database names and collection names.
 
 logFindAllResults(mycol)
 
@@ -62,6 +77,6 @@ Thread.sleep(4000)
 }
 
 /* 
-You can run this object in sbt with the command "run" and need to wait until it has finished. If you rerun the application, it will keep inserting the same document into the database each time you run the app.
+You can run this object in sbt with the command "run" and need to wait until it has finished. The first time you run the application, you can uncomment the line "completedInsertion(mydoc1, mycol)". Then, after you rerun the application you would like to comment it back in order to not ask for the same insertion again (it won't make it because it has a unique id, but you will get warnings in your output).
 */
 }
