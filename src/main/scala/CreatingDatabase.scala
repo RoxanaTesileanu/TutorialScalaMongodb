@@ -42,7 +42,6 @@ val mydoc3 : org.mongodb.scala.Document = Document(
 
 def completedInsertion (doc: Document, col: MongoCollection[Document]): scala.concurrent.Future[org.mongodb.scala.Completed] = {
      val myFutureRecord = col.insertOne(doc).toFuture
-     println(myFutureRecord)
      myFutureRecord 
 }  //this method will insert a document into the database.
 
