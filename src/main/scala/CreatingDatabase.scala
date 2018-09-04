@@ -9,15 +9,19 @@ PREREQUISITES:
 
 */
 
-import org.mongodb.scala._
+
 
 object CreatingDatabase {
 
-val mongoClient : MongoClient = MongoClient() // this should open the connection and you can inspect all the connection settings and details.
+import org.mongodb.scala._
+import concurrent.ExecutionContext.Implicits.global
 
+val mongoClient : MongoClient = MongoClient("mongodb://localhost:27017") // this should open the connection and you can inspect all the connection settings and details.
+Thread.sleep(4000)
 val mydb : MongoDatabase = mongoClient.getDatabase("MyStuff") // this creates the database; until we populate it with records it isn't really instantiated by mongodb.
+Thread.sleep(4000)
 val mycol = mydb.getCollection("FruitsAndVegetables") // this creates the collection; until we populate it, it isn't really instantiated by mongodb.
-
+Thread.sleep(4000)
 val mydoc : org.mongodb.scala.Document = Document(
 	"_id"-> 0,
 	"fruits" -> "apple",
@@ -29,18 +33,24 @@ def completedInsertion (doc: Document, col: MongoCollection[Document]): Unit = {
      override def onNext(result: Completed) : Unit = println("inserted")
      override def onError(e: Throwable) : Unit = println("failed")
      override def onComplete() : Unit = println("completed")})
+     Thread.sleep(4000)
 }  //this method will insert a document into the database.
 
 completedInsertion(mydoc, mycol) // this line uses the funtion to insert a document into the database. Now the collection and the database are instantiated and will get listed when you check the list of database names and collection names.
 
 def logFindAllResults(col: MongoCollection[Document]) : Unit = {
-col.find().foreach(println)
+concurrent.Future{col.find().foreach(println)}
+Thread.sleep(4000)
 } //this method uses the callback "foreach" to get the raw log of the existing documents within a collection. In the next script I will explain how to transit from an Observable, to Future and so on, in order to get an array of the key-value pairs within a document. At this point you should take a look at scala's futures and promises: https://docs.scala-lang.org/overviews/core/futures.html. For more details on Futures and Options in Scala consult the book of Jason Swartz "Learning Scala".
 
-mongoClient.close() // this will close the connection.
 
-def main (args: Array[String]) { //main method that will perform tasks.
+def main (args: Array[String]) {
 logFindAllResults(mycol)
+mongoClient.close() // this will close the connection.
+Thread.sleep(4000)
 }
 
+/* 
+You can run this object in sbt with the command "run" and need to wait until it has finished.
+*/
 }
