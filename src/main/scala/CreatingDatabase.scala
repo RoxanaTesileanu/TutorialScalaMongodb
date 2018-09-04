@@ -17,26 +17,35 @@ import org.mongodb.scala._
 import concurrent.ExecutionContext.Implicits.global
 
 val mongoClient : MongoClient = MongoClient("mongodb://localhost:27017") // this should open the connection and you can inspect all the connection settings and details.
-Thread.sleep(4000)
-val mydb : MongoDatabase = mongoClient.getDatabase("MyStuff") // this creates the database; until we populate it with records it isn't really instantiated by mongodb.
+Thread.sleep(7000)
+val mydb : MongoDatabase =  mongoClient.getDatabase("MyStuff") // this creates the database; until we populate it with records it isn't really instantiated by mongodb.
 Thread.sleep(4000)
 val mycol = mydb.getCollection("FruitsAndVegetables") // this creates the collection; until we populate it, it isn't really instantiated by mongodb.
 Thread.sleep(4000)
-val mydoc : org.mongodb.scala.Document = Document(
+val mydoc1 : org.mongodb.scala.Document = Document(
 	"_id"-> 0,
 	"fruits" -> "apple",
 	"color"-> "red",
-	"observation"-> "Eva took a bite and was wrong about it") // this creates a record. 
+	"observation"-> "An apple a day keeps the doctor away") // this creates a record. 
 
-def completedInsertion (doc: Document, col: MongoCollection[Document]): Unit = {
-     col.insertOne(doc).subscribe(new Observer[Completed]{
-     override def onNext(result: Completed) : Unit = println("inserted")
-     override def onError(e: Throwable) : Unit = println("failed")
-     override def onComplete() : Unit = println("completed")})
-     Thread.sleep(4000)
+val mydoc2 : org.mongodb.scala.Document = Document(
+     "_id"->1,
+     "fruits" -> "banane",
+     "color" -> "yellow",
+     "observation" -> "Everyone loves them")
+
+val mydoc3 : org.mongodb.scala.Document = Document(
+     "_id"->2,
+     "fruits" -> "citruses",
+     "color" -> "yellow",
+     "observation" -> "They are healthy!")
+
+def completedInsertion (doc: Document, col: MongoCollection[Document]): scala.concurrent.Future[org.mongodb.scala.Completed] = {
+     val myFutureRecord = col.insertOne(doc).toFuture
+     println(myFutureRecord)
+     myFutureRecord 
 }  //this method will insert a document into the database.
 
-//completedInsertion(mydoc, mycol)  this line uses the funtion to insert a document into the database. Now the collection and the database are instantiated and will get listed when you check the list of database names and collection names.
 
 def logFindAllResults(col: MongoCollection[Document]) : Unit = {
 concurrent.Future{col.find().foreach(println)}
@@ -45,12 +54,15 @@ Thread.sleep(4000)
 
 
 def main (args: Array[String]) {
+//completedInsertion(mydoc, mycol) this line uses the function to insert a document into the database. Now, if the collection and the database don't exist they are instantiated and will get listed when you check the list of database names and collection names.
+
 logFindAllResults(mycol)
+
 mongoClient.close() // this will close the connection.
 Thread.sleep(4000)
 }
 
 /* 
-You can run this object in sbt with the command "run" and need to wait until it has finished.
+You can run this object in sbt with the command "run" and need to wait until it has finished. If you rerun the application, it will keep inserting the same document into the database each time you run the app.
 */
 }
