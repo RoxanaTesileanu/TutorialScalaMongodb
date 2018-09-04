@@ -36,7 +36,7 @@ def completedInsertion (doc: Document, col: MongoCollection[Document]): Unit = {
      Thread.sleep(4000)
 }  //this method will insert a document into the database.
 
-completedInsertion(mydoc, mycol) // this line uses the funtion to insert a document into the database. Now the collection and the database are instantiated and will get listed when you check the list of database names and collection names.
+//completedInsertion(mydoc, mycol)  this line uses the funtion to insert a document into the database. Now the collection and the database are instantiated and will get listed when you check the list of database names and collection names.
 
 def logFindAllResults(col: MongoCollection[Document]) : Unit = {
 concurrent.Future{col.find().foreach(println)}
