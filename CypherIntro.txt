@@ -1,0 +1,182 @@
+Neo4j - Introduction in Cypher-Shell
+
+
+1) Create nodes:
+
+
+neo4j> CREATE (emil: Person{name: "Emil", age:21});
+0 rows available after 279 ms, consumed after another 0 ms
+Added 1 nodes, Set 2 properties, Added 1 labels
+neo4j> CREATE (jim: Person {name : "Jim", age: 22});
+0 rows available after 56 ms, consumed after another 0 ms
+Added 1 nodes, Set 2 properties, Added 1 labels
+neo4j> CREATE (ian: Person {name : "Ian", age:40});
+0 rows available after 116 ms, consumed after another 0 ms
+Added 1 nodes, Set 2 properties, Added 1 labels
+neo4j> CREATE (roxi:Person{name: "Roxi", age: 35});
+0 rows available after 28 ms, consumed after another 0 ms
+Added 1 nodes, Set 2 properties, Added 1 labels
+neo4j> CREATE (mona:Person{name:"Mona", age: 62});
+0 rows available after 29 ms, consumed after another 1 ms
+Added 1 nodes, Set 2 properties, Added 1 labels
+
+
+2) Create relationships:
+
+neo4j> MATCH (a:Person), (b:Person) WHERE a.name="Jim" AND b.name="Ian" CREATE (a)-[r:KNOWS]-> (b);
+0 rows available after 664 ms, consumed after another 0 ms
+Created 1 relationships
+
+
+neo4j> MATCH (a:Person), (b:Person) WHERE a.name="Emil" AND b.name="Ian" CREATE (a)<-[r:KNOWS]- (b) RETURN r;
++----------+
+| r        |
++----------+
+| [:KNOWS] |
++----------+
+
+1 row available after 356 ms, consumed after another 0 ms
+Created 1 relationships
+
+neo4j> MATCH (a:Person), (b:Person) WHERE a.name="Jim" AND b.name="Ian" CREATE (a)-[r:KNOWS]-> (b) RETURN r;
++----------+
+| r        |
++----------+
+| [:KNOWS] |
++----------+
+
+1 row available after 3 ms, consumed after another 1 ms
+Created 1 relationships
+
+neo4j> MATCH (n) RETURN (n);
++-----------------------------------+
+| n                                 |
++-----------------------------------+
+| (:Person {name: "Emil", age: 21}) |
+| (:Person {name: "Jim", age: 22})  |
+| (:Person {name: "Ian", age: 40})  |
+| (:Person {name: "Roxi", age: 35}) |
+| (:Person {name: "Mona", age: 62}) |
++-----------------------------------+
+
+5 rows available after 1 ms, consumed after another 1 ms
+
+neo4j> MATCH (a:Person), (b:Person) WHERE a.name="Mona" AND b.name="Roxi" CREATE (a)-[g:gavebirthto]-> (b) RETURN g;
++----------------+
+| g              |
++----------------+
+| [:gavebirthto] |
++----------------+
+
+1 row available after 323 ms, consumed after another 1 ms
+Created 1 relationships
+
+
+3) Select data (nodes and relationships)
+
+MATCH (p:Person) WHERE p.name="Roxi" RETURN p;
++-----------------------------------+
+| p                                 |
++-----------------------------------+
+| (:Person {name: "Roxi", age: 35}) |
++-----------------------------------+
+
+1 row available after 84 ms, consumed after another 1 ms
+
+neo4j> MATCH (a:Person)-[:gavebirthto]-> (b:Person) RETURN a;
++-----------------------------------+
+| a                                 |
++-----------------------------------+
+| (:Person {name: "Mona", age: 62}) |
++-----------------------------------+
+
+1 row available after 285 ms, consumed after another 42 ms
+
+neo4j> MATCH (a:Person)-[:KNOWS]-> (b:Person) RETURN a,b;
++----------------------------------------------------------------------+
+| a                                | b                                 |
++----------------------------------------------------------------------+
+| (:Person {name: "Jim", age: 22}) | (:Person {name: "Ian", age: 40})  |
+| (:Person {name: "Jim", age: 22}) | (:Person {name: "Ian", age: 40})  |
+| (:Person {name: "Ian", age: 40}) | (:Person {name: "Emil", age: 21}) |
++----------------------------------------------------------------------+
+
+3 rows available after 145 ms, consumed after another 6 ms
+
+neo4j> MATCH (a:Person{name:"Jim"})-[:KNOWS]-> (b:Person) RETURN b;
++----------------------------------+
+| b                                |
++----------------------------------+
+| (:Person {name: "Ian", age: 40}) |
+| (:Person {name: "Ian", age: 40}) |
++----------------------------------+
+
+2 rows available after 57 ms, consumed after another 1 ms
+
+
+neo4j> MATCH (a:Person)-[relation]-> (b:Person) RETURN a,b;
++-----------------------------------------------------------------------+
+| a                                 | b                                 |
++-----------------------------------------------------------------------+
+| (:Person {name: "Mona", age: 62}) | (:Person {name: "Roxi", age: 35}) |
++-----------------------------------------------------------------------+
+
+1 row available after 100 ms, consumed after another 6 ms
+
+
+
+4) Deleting nodes and relationships (delete and detach delete)
+
+neo4j> MATCH (p:Person{name: "Jim"}) DELETE p;
+Cannot delete node<20>, because it still has relationships. To delete this node, you must first delete its relationships.
+
+neo4j> MATCH (p:Person{name: "Jim"}) DETACH DELETE p;
+0 rows available after 175 ms, consumed after another 0 ms
+Deleted 1 nodes, Deleted 2 relationships
+
+Delete all relationships of type r:
+
+neo4j> MATCH ()-[r:KNOWS]-() DELETE r;
+0 rows available after 71 ms, consumed after another 0 ms
+Deleted 1 relationships
+
+neo4j> MATCH (a:Person)-[relation]-> (b:Person) RETURN a,b;
++-----------------------------------------------------------------------+
+| a                                 | b                                 |
++-----------------------------------------------------------------------+
+| (:Person {name: "Mona", age: 62}) | (:Person {name: "Roxi", age: 35}) |
++-----------------------------------------------------------------------+
+
+1 row available after 100 ms, consumed after another 6 ms
+
+
+5) Adding and removing properties:
+
+neo4j> MATCH (a:Person) WHERE a.name="Roxi" SET a.feature="great girl";
+0 rows available after 199 ms, consumed after another 0 ms
+Set 1 properties
+neo4j> MATCH (a:Person) WHERE a.name="Roxi" RETURN a;
++----------------------------------------------------------+
+| a                                                        |
++----------------------------------------------------------+
+| (:Person {name: "Roxi", feature: "great girl", age: 35}) |
++----------------------------------------------------------+
+
+1 row available after 3 ms, consumed after another 1 ms
+
+
+neo4j> MATCH (a:Person) WHERE a.name="Roxi" REMOVE a.feature RETURN a;
++-----------------------------------+
+| a                                 |
++-----------------------------------+
+| (:Person {name: "Roxi", age: 35}) |
++-----------------------------------+
+
+1 row available after 142 ms, consumed after another 1 ms
+Set 1 properties
+
+
+6) Other stuff to check:
+
+ ON, LOAD CSV, FROM, INTO, START, MATCH, UNWIND, MERGE, CREATE GRAPH >>, CREATE >> GRAPH, CREATE GRAPH, CREATE, SET, DELETE GRAPHS, DELETE, REMOVE, FOREACH, WITH, CALL, PERSIST, RELOCATE, RETURN, SNAPSHOT, UNION, 
+
