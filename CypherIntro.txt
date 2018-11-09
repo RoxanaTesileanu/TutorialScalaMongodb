@@ -180,3 +180,8 @@ Set 1 properties
 
  ON, LOAD CSV, FROM, INTO, START, MATCH, UNWIND, MERGE, CREATE GRAPH >>, CREATE >> GRAPH, CREATE GRAPH, CREATE, SET, DELETE GRAPHS, DELETE, REMOVE, FOREACH, WITH, CALL, PERSIST, RELOCATE, RETURN, SNAPSHOT, UNION, 
 
+7) References:
+
+Ian Robinson, Jim Webber, Emil Eifrem, 2015, Graph Databases, O’Reilly
+
+https://www.quackit.com/neo4j/tutorial/
